@@ -1,6 +1,10 @@
 # EVA Assignments
  
 # Assignment 4
+
+## Submitted by
+    - Siva Sankar Anil Kumar
+    - Dinesh Kesaboina
  
 ### The assignment is divided into 3 Experiments
  
@@ -59,12 +63,13 @@
    - Results
      - Feature Visualization
        - Input image
-          
-           <img src="img/exp1_input.png" width=50 height=50>
+          <p align="center">
+           <img src="img/exp1_input.png" width=100 height=100>
+          </p>
       
        - Result
           
-           <img src="img/exp1_fv.png" width=500 height=400>
+           <img src="img/exp1_fv.png" width=700 height=500>
  
 - **Experiment 2**
    - Strategy
@@ -122,11 +127,13 @@
      - Feature Visualization
        - Input image
           
-           <img src="img/exp2_input.png" width=50 height=50>
+          <p align="center">
+           <img src="img/exp2_input.png" width=100 height=100>
+          </p>
       
        - Result
           
-           <img src="img/exp2_fv.png" width=500 height=400>
+           <img src="img/exp2_fv.png" width=700 height=500>
  
 - **Experiment 3**
    - Strategy
@@ -184,11 +191,13 @@
      - Feature Visualization
        - Input image
  
-           <img src="img/exp3_input.png" width=50 height=50>
+          <p align="center">
+           <img src="img/exp3_input.png" width=100 height=100>
+          </p>
       
        - Result
           
-           <img src="img/exp3_fv.png" width=500 height=400>
+           <img src="img/exp3_fv.png" width=700 height=500>
  
  
 ### Results
