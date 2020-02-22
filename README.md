@@ -226,3 +226,56 @@
        -   In case of the _Experiment 2_, as previously stated in case of the loss function, it can be observed to overfit tremendously as train accuracy can be observed to be way higher than test accuracy majority of the time.
  
        -   Introduction of Dropout in _Experiment 3_ enabled slow training and better generalization resulting in better accuracies.
+
+# Assignment 5
+
+## Submitted by
+    - Siva Sankar Anil Kumar
+    - Dinesh Kesaboina
+ 
+### The assignment is divided into 5 steps
+ 
+- Step 1
+    - Setting up the work flow
+        | Metric | Value |
+        | - | - |
+        | _Best train accuracy_| **99.4** |
+        | _Best test accuracy_| **99.2** |
+        | _Best epoch number_| **12** |
+        | _Parameter count_ | **194,884** |
+
+- Step 2
+    - Brute force minimization of the number of parameters
+        | Metric | Value |
+        | - | - |
+        | _Best train accuracy_| **98.2** |
+        | _Best test accuracy_| **98.4** |
+        | _Best epoch number_| **9** |
+        | _Parameter count_ | **8,040** |
+
+- Step 3
+    - Introduce batch-norm and dropout
+        | Metric | Value |
+        | - | - |
+        | _Best train accuracy_| **98.7** |
+        | _Best test accuracy_| **99.2** |
+        | _Best epoch number_| **8** |
+        | _Parameter count_ | **8,172** |
+
+- Step 4
+    - Introduce GAP layer and blow up parameter count
+        | Metric | Value |
+        | - | - |
+        | _Best train accuracy_| **99.10** |
+        | _Best test accuracy_| **99.44** |
+        | _Best epoch number_| **14** |
+        | _Parameter count_ | **9,608** |
+
+- Step 5
+    - Add image augmentation and lr scheduling
+        | Metric | Value |
+        | - | - |
+        | _Best train accuracy_| **99.05** |
+        | _Best test accuracy_| **99.46** |
+        | _Best epoch number_| **14** |
+        | _Parameter count_ | **9,608** |
