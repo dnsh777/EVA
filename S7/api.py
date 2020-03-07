@@ -30,5 +30,6 @@ class Experiment(object):
             'use_cuda': use_cuda
         }
 
-    def __init__(self):
+    def __init__(self, name):
         super().__init__()
+        self.name = name
