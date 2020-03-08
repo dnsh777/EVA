@@ -5,7 +5,7 @@ from .settings import cifar10_classes
 import torchvision
 
 def viz_cifar10_grid(train_loader):
-
+    # This is a comment
     def imshow(img):
         img = (img - img.min()) / (img.max() - img.min())     # unnormalize
         npimg = img.numpy()
