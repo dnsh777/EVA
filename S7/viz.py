@@ -15,6 +15,7 @@ def viz_cifar10_grid(train_loader):
     # get some random training images
     dataiter = iter(train_loader)
     images, labels = dataiter.next()
+    # Modification comment
 
     # show images
     imshow(torchvision.utils.make_grid(images))
