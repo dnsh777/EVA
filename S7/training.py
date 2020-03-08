@@ -24,7 +24,7 @@ class Train(object):
             
             # Move data to cpu/gpu based on input
             data, target = data.to(self.device), target.to(self.device)
-            optimizer.zero_grad()
+            self.optimizer.zero_grad()
 
             # Forward pass
             output = self.model(data)
