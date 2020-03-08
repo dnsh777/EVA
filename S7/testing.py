@@ -1,5 +1,6 @@
 import torch.nn as nn                        # Import neural net module from pytorch
 import torch.nn.functional as F              # Import functional interface from pytorch
+import torch
 
 from tqdm import tqdm
 
