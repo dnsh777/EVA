@@ -50,7 +50,7 @@ class Train(object):
             batch_loss.backward()
             
             # Gradient descent
-            optimizer.step()
+            self.optimizer.step()
 
             # Logging - updating progress bar and summary writer
             pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} accuracy={(100. * correct / train_len):.2f}')
