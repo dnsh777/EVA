@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import datetime
+import tqdm
 
 import torch
 import torch.optim as optim                        # Import optimizer module from pytorch
@@ -61,6 +62,9 @@ class Experiment(object):
     
 
     def run(self, epochs=40, momentum=0.9, lr=0.01, regularization=None, weight_decay=0.01):
+        if hasattr(tqdm, '_instances'):
+            tqdm._instances.clear()
+
         now = datetime.datetime.now()
         prefix = now.strftime('%m-%d-%y %H:%M:%S')
 
