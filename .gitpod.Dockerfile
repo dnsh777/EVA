@@ -4,7 +4,8 @@ USER gitpod
 
 RUN pip3 install torch torchvision
 RUN pip3 install tqdm
-RUN pip3 install torchsummary, torchviz
+RUN pip install torchsummary
+RUN pip install torchviz
 
 # Install custom tools, runtime, etc. using apt-get
 # For example, the command below would install "bastet" - a command line tetris clone:
