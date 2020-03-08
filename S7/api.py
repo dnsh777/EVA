@@ -71,9 +71,9 @@ class Experiment(object):
         test_writer = SummaryWriter(test_dir)
 
         if regularization == 'L2' or regularization == 'L1 and L2':
-            optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
+            optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=momentum, weight_decay=weight_decay)
         else:
-            optimizer = optim.SGD(model.parameters(), lr=lr, momentum=momentum)
+            optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=momentum)
 
         scheduler = StepLR(optimizer, step_size=15, gamma=0.1)
 
