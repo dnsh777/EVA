@@ -37,10 +37,10 @@ class Train(object):
             # Regularization
             if regularization == 'L1' or regularization == 'L1 and L2':
                 l1_loss = nn.L1Loss(reduction='sum')
-            regularization_loss = 0
-            for param in model.parameters():
-                regularization_loss += l1_loss(param, target=torch.zeros_like(param))
-            train_loss += weight_decay * regularization_loss # regularization loss
+                regularization_loss = 0
+                for param in self.model.parameters():
+                    regularization_loss += l1_loss(param, target=torch.zeros_like(param))
+                train_loss += weight_decay * regularization_loss # regularization loss
             
             # Predictions
             pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
