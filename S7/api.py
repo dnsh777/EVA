@@ -1,7 +1,7 @@
 import numpy as np
 import random
 import datetime
-import tqdm
+from tqdm import tqdm
 
 import torch
 import torch.optim as optim                        # Import optimizer module from pytorch
