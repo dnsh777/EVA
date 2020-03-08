@@ -1,3 +1,4 @@
+import torch
 from torchsummary import summary             # Import summary with pytorch
 from torchviz import make_dot
 from torch.autograd import Variable

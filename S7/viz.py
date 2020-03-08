@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from .settings import cifar10_classes
 
+import torchvision
+
 def viz_cifar10_grid(train_loader):
 
     def imshow(img):
