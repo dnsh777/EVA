@@ -23,8 +23,8 @@ class DataManager(object):
             self.test_transforms = transforms.Compose([transforms.ToTensor(),
                                                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2471, 0.2435, 0.2616))])
             
-            self.trainset = datasets.CIFAR10(root='./data', train=True, download=True, transform=train_transforms)
-            self.testset = datasets.CIFAR10(root='./data', train=False, download=True, transform=test_transforms)
+            self.trainset = datasets.CIFAR10(root='./data', train=True, download=True, transform=self.train_transforms)
+            self.testset = datasets.CIFAR10(root='./data', train=False, download=True, transform=self.test_transforms)
 
             # dataloader arguments - something you'll fetch these from cmdprmt
             dataloader_args = dict(shuffle=True, batch_size=batch_size, num_workers=4, pin_memory=True) if use_cuda else dict(shuffle=True, batch_size=batch_size)
