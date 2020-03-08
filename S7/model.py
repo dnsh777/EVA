@@ -5,7 +5,7 @@ import torch.nn.functional as F              # Import functional interface from 
 # Subclassing nn.Module for neural networks
 class Net(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super().__init__()
 
         ##############################################################################################################
         # CONVOLUTION BLOCK 1 - DILATED CONVOLUTION
