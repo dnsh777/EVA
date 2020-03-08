@@ -30,6 +30,6 @@ class DataManager(object):
             dataloader_args = dict(shuffle=True, batch_size=batch_size, num_workers=4, pin_memory=True) if use_cuda else dict(shuffle=True, batch_size=batch_size)
 
             # train dataloader
-            self.train_loader = torch.utils.data.DataLoader(trainset, **dataloader_args)
+            self.train_loader = torch.utils.data.DataLoader(self.trainset, **dataloader_args)
             # test dataloader
-            self.test_loader = torch.utils.data.DataLoader(testset, **dataloader_args)
+            self.test_loader = torch.utils.data.DataLoader(self.testset, **dataloader_args)
