@@ -1,4 +1,5 @@
 import torchvision
+import torch
 from torchvision import datasets, transforms # Import datasets and augmentation functionality from vision module within pytorch
 
 class DataManager(object):
