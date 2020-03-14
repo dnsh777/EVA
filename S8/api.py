@@ -8,7 +8,7 @@ import torch.optim as optim                        # Import optimizer module fro
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import StepLR
 
-from .model import Net
+from .model import ResNet18
 from .data_manager import DataManager
 from .training import Train
 from .testing import Test
@@ -54,7 +54,7 @@ class Experiment(object):
         self.test_dir_suffix = f'{self.dir_suffix}/run_test_{self.name}'
 
         # Initializing model
-        self.model = Net().to(device=self.device)
+        self.model = ResNet18().to(device=self.device)
 
         # Initializing data
         self.data_manager = DataManager(dataset_name=dataset_name)
