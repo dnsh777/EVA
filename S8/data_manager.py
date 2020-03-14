@@ -15,8 +15,8 @@ class DataManager(object):
         if self.dataset_name == 'cifar10':
             # Train Phase transformations
             self.train_transforms = transforms.Compose([transforms.RandomRotation(15),
-                                                transforms.RandomResizedCrop(32, scale=(0.8, 1.0)),
-                                                transforms.RandomHorizontalFlip(),
+                                                # transforms.RandomResizedCrop(32, scale=(0.8, 1.0)),
+                                                # transforms.RandomHorizontalFlip(),
                                                 transforms.ToTensor(),
                                                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2471, 0.2435, 0.2616))])
 
