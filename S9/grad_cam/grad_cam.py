@@ -48,7 +48,7 @@ class GradCam():
         return backward_hook
 
     # Register hooks to collect gradients and activations
-    for layer_name in target_layers:
+    for layer_name in self.target_layers:
         if layer_name in self.name_layer_map:
             forward_handler = self.name_layer_map[layer_name].register_forward_hook(get_activations(layer_name))
             backward_handler = self.name_layer_map[layer_name].register_backward_hook(get_gradients(layer_name))
@@ -72,7 +72,7 @@ class GradCam():
     logits.backward(gradient=one_hot, retain_graph=True)
 
     # Get overlays for all layers
-    for layer_name in target_layers:
+    for layer_name in self.target_layers:
       if layer_name in gradients and layer_name in activations:
 
         # GAP on gradients
