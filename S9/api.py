@@ -89,5 +89,5 @@ class Experiment(object):
         
         for epoch in range(0, epochs):
             train.step(epoch, regularization, weight_decay)
-            test.step(epoch, regularization, weight_decay)
+            # test.step(epoch, regularization, weight_decay)
             scheduler.step()
