@@ -5,7 +5,6 @@ from .settings import cifar10_classes
 import torchvision
 
 def viz_cifar10_grid(train_loader):
-    # This is a comment
     def imshow(img):
         img = (img - img.min()) / (img.max() - img.min())     # unnormalize
         npimg = img.numpy()
@@ -19,6 +18,22 @@ def viz_cifar10_grid(train_loader):
 
     # show images
     imshow(torchvision.utils.make_grid(images))
+    # print labels
+    print(' '.join('%5s' % cifar10_classes[labels[j]] for j in range(4)))
+
+def viz_cifar10_grid_(train_loader):
+    def show(img):
+        npimg = img.numpy()
+        plt.imshow(np.transpose(npimg, (1,2,0)), interpolation='nearest')
+
+
+    # get some random training images
+    dataiter = iter(train_loader)
+    images, labels = dataiter.next()  
+    # Modification comment
+
+    # show images
+    show(torchvision.utils.make_grid(images))
     # print labels
     print(' '.join('%5s' % cifar10_classes[labels[j]] for j in range(4)))
 

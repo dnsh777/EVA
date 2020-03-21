@@ -1,6 +1,6 @@
 import cv2
 import matplotlib.pyplot as plt
-from .settings import cifar10_classes
+from ..settings import cifar10_classes
 
 from torch.nn import functional as F
 
