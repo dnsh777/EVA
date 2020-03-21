@@ -13,7 +13,7 @@ from .data_manager import DataManager
 from .training import Train
 from .testing import Test
 
-__assignment_name__ = 's9'
+__assignment_name__ = 's8'
 
 class Experiment(object):
     """
