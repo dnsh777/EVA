@@ -8,8 +8,9 @@ import torch.optim as optim                        # Import optimizer module fro
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import StepLR
 
-from .model import ResNet18
-from .data_manager import DataManager
+from .models.model_s9 import ResNet18
+# from .data_manager.data_manager_pytorch import DataManager
+from .data_manager.data_manager_albumentations import DataManager
 from .training import Train
 from .testing import Test
 
