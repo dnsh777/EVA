@@ -7,21 +7,28 @@ class DataManager(object):
     Class that handles data management for an experiment
     """
     
-    def __init__(self, batch_size=64, use_cuda=True, dataset_name='cifar10'):
+    def __init__(self, batch_size=64, use_cuda=True, dataset_name='cifar10', 
+                 train_transforms=None, test_transforms=None):
         super().__init__()
 
         self.dataset_name = dataset_name
 
         if self.dataset_name == 'cifar10':
             # Train Phase transformations
-            self.train_transforms = transforms.Compose([transforms.RandomRotation(15),
+            if train_transforms:
+                self.train_transforms = train_transforms
+            else:
+                self.train_transforms = transforms.Compose([transforms.RandomRotation(15),
                                                 transforms.RandomResizedCrop(32, scale=(0.8, 1.0)),
                                                 transforms.RandomHorizontalFlip(),
                                                 transforms.ToTensor(),
                                                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2471, 0.2435, 0.2616))])
 
             # Test Phase transformations
-            self.test_transforms = transforms.Compose([transforms.ToTensor(),
+            if test_transforms:
+                self.test_transforms = test_transforms
+            else:
+                self.test_transforms = transforms.Compose([transforms.ToTensor(),
                                                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2471, 0.2435, 0.2616))])
             
             self.trainset = datasets.CIFAR10(root='./data', train=True, download=True, transform=self.train_transforms)
