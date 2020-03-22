@@ -4,7 +4,6 @@ import numpy as np
 import pandas as pd
 import cv2
 
-from __future__ import print_function        # Import for print statement
 import torch                                 # Import pytorch library
 import torch.nn as nn                        # Import neural net module from pytorch
 import torch.nn.functional as F              # Import functional interface from pytorch
