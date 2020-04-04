@@ -154,7 +154,7 @@ class Experiment(object):
         failed_samples = []
         while fail_count < no_of_images:
             data, target = train_loader_iterator.next()
-            data, target = data.to(device), target.to(device)
+            data, target = data.to(self.device), target.to(self.device)
 
             output = self.model(data)
 
