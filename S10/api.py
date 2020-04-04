@@ -109,7 +109,7 @@ class Experiment(object):
         This function loads summary after training
         """
         train_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
-        test_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
+        test_log_file = sorted(glob.glob(f'{self.test_dir_suffix}_*/events.out.tfevents.*'))[index]
 
         experiment_data = {self.name: (train_log_file, test_log_file)}
         self.summary = {}
@@ -137,9 +137,9 @@ class Experiment(object):
         fig, axs = plt.subplots(1, 1, figsize=figsize)
         axs.plot(self.summary[self.name]['train'][metric])
         axs.plot(self.summary[self.name]['test'][metric])
-        axs.set_title(f'Loss plot {self.name}')
+        axs.set_title(f'Loss plot {self.name}'.upper())
         axs.set_ylabel(metric.upper())
-        axs.set_xlabel('Epoch')
+        axs.set_xlabel('EPOCH')
         axs.set_ylim(ylim)
         axs.legend(['train', 'test'], loc='best')
 
@@ -149,7 +149,7 @@ class Experiment(object):
         """
         This function gets the misclassified images
         """
-        train_loader_iterator = iter(self.train_loader)
+        train_loader_iterator = iter(self.data_manager.train_loader)
         fail_count = 0
         failed_samples = []
         while fail_count < no_of_images:
