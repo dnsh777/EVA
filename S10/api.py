@@ -177,4 +177,4 @@ class Experiment(object):
 
                 failed_samples.append(failed_sample)
 
-        return failed_samples
+        return failed_samples[0:no_of_images]
