@@ -149,11 +149,11 @@ class Experiment(object):
         """
         This function gets the misclassified images
         """
-        train_loader_iterator = iter(self.data_manager.train_loader)
+        test_loader_iterator = iter(self.data_manager.test_loader)
         fail_count = 0
         failed_samples = []
         while fail_count < no_of_images:
-            data, target = train_loader_iterator.next()
+            data, target = test_loader_iterator.next()
             data, target = data.to(self.device), target.to(self.device)
 
             output = self.model(data)
@@ -175,6 +175,6 @@ class Experiment(object):
                     'prediction': failed_prediction[count].item()
                 }
 
-            failed_samples.append(failed_sample)
+                failed_samples.append(failed_sample)
 
         return failed_samples
