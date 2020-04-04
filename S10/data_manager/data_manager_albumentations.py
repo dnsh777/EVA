@@ -2,7 +2,7 @@ import torchvision
 from torchvision import datasets
 
 import torch
-from albumentations import Compose, Rotate, HorizontalFlip, Normalize, RandomSizedCrop
+from albumentations import Compose, Rotate, HorizontalFlip, Normalize, RandomSizedCrop, Cutout
 from albumentations.pytorch import ToTensor
 
 class CIFAR10_dataset(datasets.CIFAR10):
@@ -57,7 +57,8 @@ class DataManager(object):
                     self.train_transforms = train_transforms
                 else:
                     self.train_transforms = train_transforms = Compose([Rotate(limit=15), 
-                                                                        RandomSizedCrop(min_max_height=(20, 32), height=32, width=32),
+                                                                        Cutout(num_holes=4, max_h_size=8, max_w_size=8, always_apply=False, p=0.5),
+                                                                        # RandomSizedCrop(min_max_height=(20, 32), height=32, width=32),
                                                                         HorizontalFlip(),
                                                                         Normalize(
                                                                             mean=[0.4914, 0.4822, 0.4465],
