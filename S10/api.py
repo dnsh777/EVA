@@ -98,7 +98,7 @@ class Experiment(object):
             optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=momentum)
 
         # scheduler = StepLR(optimizer, step_size=15, gamma=0.1)
-        scheduler = ReduceLROnPlateau(optimizer, 'min')
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=5)
         
         train = Train(model=self.model, optimizer=optimizer, device=self.device, train_loader=self.data_manager.train_loader, writer=train_writer)
         test = Test(model=self.model, device=self.device, test_loader=self.data_manager.test_loader, writer=test_writer)
