@@ -105,6 +105,9 @@ class Experiment(object):
             scheduler.step()
     
     def load_summary(self, index=-1):
+        """
+        This function loads summary after training
+        """
         train_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
         test_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
 
@@ -128,10 +131,12 @@ class Experiment(object):
             self.summary[experiment]['test'] = test_data
     
     def plot_metric(self, metric='accuracy', figsize=(15, 5), ylim=[40, 100]):
-        fig, axs = plt.subplots(1, 1, figsize=(15, 5))
-
-        axs.plot(summary[self.name]['train'][metric])
-        axs.plot(summary[self.name]['test'][metric])
+        """
+        This function loads a specific metric after training
+        """
+        fig, axs = plt.subplots(1, 1, figsize=figsize)
+        axs.plot(self.summary[self.name]['train'][metric])
+        axs.plot(self.summary[self.name]['test'][metric])
         axs.set_title(f'Loss plot {self.name}')
         axs.set_ylabel(metric.upper())
         axs.set_xlabel('Epoch')
@@ -139,3 +144,37 @@ class Experiment(object):
         axs.legend(['train', 'test'], loc='best')
 
         plt.show()
+    
+    def get_mis_classified(self, no_of_images=25):
+        """
+        This function gets the misclassified images
+        """
+        train_loader_iterator = iter(self.train_loader)
+        fail_count = 0
+        failed_samples = []
+        while fail_count < no_of_images:
+            data, target = train_loader_iterator.next()
+            data, target = data.to(device), target.to(device)
+
+            output = self.model(data)
+
+            pred = output.argmax(dim=1, keepdim=True)
+            failed_index = ~pred.eq(target.view_as(pred)).squeeze()
+
+            failed_data = data[failed_index]
+            failed_target = target[failed_index]
+            failed_prediction = pred[failed_index]
+            
+            batch_fail_count = failed_data.size(dim=0)
+            fail_count += batch_fail_count
+
+            for count in range(batch_fail_count):
+                failed_sample = {
+                    'data': failed_data[count],
+                    'target': failed_target[count],
+                    'prediction': failed_prediction[count].item()
+                }
+
+            failed_samples.append(failed_sample)
+
+        return failed_samples
