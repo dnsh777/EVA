@@ -112,7 +112,7 @@ class Experiment(object):
         test_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
 
         experiment_data = {self.name: (train_log_file, test_log_file)}
-        summary = {}
+        self.summary = {}
         for experiment, (train, test) in experiment_data.items():
             train_data = {}
             test_data = {}
