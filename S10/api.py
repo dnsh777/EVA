@@ -8,7 +8,7 @@ from tqdm import tqdm
 import torch
 import torch.optim as optim                  # Import optimizer module from pytorch
 import torch.nn as nn                        # Import neural net module from pytorch
-
+from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # Tensorflow import
@@ -149,9 +149,9 @@ class Experiment(object):
 
         plt.show()
     
-    def lr_range_test(self, start_lr=1e-6, end_lr=1.4, num_iter=500):
+    def lr_range_test(self, momentum=0.9, weight_decay=0.01, start_lr=1e-6, end_lr=1.4, num_iter=500):
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.SGD(self.model.parameters(), lr=1e-6, momentum=0.9)
+        optimizer = optim.SGD(self.model.parameters(), lr=1e-6, momentum=momentum, weight_decay=weight_decay)
 
         lr_finder = LRFinder(self.model, optimizer, criterion, device="cuda")
         lr_finder.range_test(self.data_manager.train_loader, start_lr=1e-6, end_lr=1.4, num_iter=500, step_mode='exp')
