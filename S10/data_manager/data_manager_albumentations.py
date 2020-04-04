@@ -57,8 +57,8 @@ class DataManager(object):
                     self.train_transforms = train_transforms
                 else:
                     self.train_transforms = train_transforms = Compose([Rotate(limit=15), 
-                                                                        Cutout(num_holes=6, max_h_size=12, max_w_size=12, always_apply=False, p=0.5),
-                                                                        # RandomSizedCrop(min_max_height=(20, 32), height=32, width=32),
+                                                                        Cutout(num_holes=8, max_h_size=12, max_w_size=12, always_apply=False, p=0.5),
+                                                                        RandomSizedCrop(min_max_height=(20, 32), height=32, width=32),
                                                                         HorizontalFlip(),
                                                                         Normalize(
                                                                             mean=[0.4914, 0.4822, 0.4465],
