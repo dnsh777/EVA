@@ -99,7 +99,7 @@ class GradCam():
             ax = fig.add_subplot(1, len(overlays), i + 1)
             plt.imshow(value)
             ax.yaxis.set_visible(False)
-            plt.xlabel(f'Cam label : {cifar10_classes[prediction]} \n layer : {key}')
+            plt.xlabel(f'Cam label : {cifar10_classes[one_hot_label]} \n layer : {key}')
             ax.set_xticks([])
             if title:
                 ax.set_title(f'Target : {cifar10_classes[target]} \n Prediction : {cifar10_classes[prediction]}')
