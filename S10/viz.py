@@ -24,7 +24,7 @@ def viz_cifar10_grid(train_loader):
 def viz_cifar10_grid_(train_loader):
     def show(img):
         npimg = img.numpy()
-        plt.figure(figsize = (25, 25))
+        plt.figure(figsize = (15, 15))
         plt.imshow(np.transpose(npimg, (1,2,0)), interpolation='nearest')
 
 
@@ -35,8 +35,6 @@ def viz_cifar10_grid_(train_loader):
 
     # show images
     show(torchvision.utils.make_grid(images))
-    # print labels
-    print(' '.join('%5s' % cifar10_classes[labels[j]] for j in range(4)))
 
 
 def viz_cifar_single_image(train_loader):
