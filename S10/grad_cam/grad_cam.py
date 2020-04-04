@@ -91,7 +91,7 @@ class GradCam():
         
         return overlays
 
-    def display_heatmaps(self, overlays, one_hot_label, target):
+    def display_heatmaps(self, overlays, prediction, target, one_hot_label, title=False):
         fig = plt.figure(figsize=(25, 8))
         fig.tight_layout()
 
@@ -99,8 +99,9 @@ class GradCam():
             ax = fig.add_subplot(1, len(overlays), i + 1)
             plt.imshow(value)
             ax.yaxis.set_visible(False)
-            plt.xlabel(key)
+            plt.xlabel(f'Cam label : {cifar10_classes[prediction]} \n layer : {key}')
             ax.set_xticks([])
-            ax.set_title(f'Target : {cifar10_classes[target]} \n Prediction : {cifar10_classes[one_hot_label]}')
+            if title:
+                ax.set_title(f'Target : {cifar10_classes[target]} \n Prediction : {cifar10_classes[prediction]}')
         
         plt.show()
