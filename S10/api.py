@@ -1,20 +1,28 @@
 import numpy as np
 import random
 import datetime
+import glob
 from tqdm import tqdm
 
+# Pytorch import
 import torch
 import torch.optim as optim                        # Import optimizer module from pytorch
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim.lr_scheduler import StepLR
 
-from .models.model_s9 import ResNet18
+# Tensorflow import
+import tensorflow as tf
+
+# Matplotlib import
+import matplotlib.pyplot as plt
+
+from .models.model_s10 import ResNet18
 # from .data_manager.data_manager_pytorch import DataManager
 from .data_manager.data_manager_albumentations import DataManager
 from .training import Train
 from .testing import Test
 
-__assignment_name__ = 's9'
+__assignment_name__ = 's10'
 
 class Experiment(object):
     """
@@ -60,6 +68,9 @@ class Experiment(object):
         # Initializing data
         self.data_manager = DataManager(dataset_name=dataset_name)
 
+        # Holder for logs
+        self.summary = {}
+
     
 
     def run(self, epochs=40, momentum=0.9, lr=0.01, regularization=None, weight_decay=0.01):
@@ -92,3 +103,39 @@ class Experiment(object):
             train.step(epoch, regularization, weight_decay)
             test.step(epoch, regularization, weight_decay)
             scheduler.step()
+    
+    def load_summary(self, index=-1):
+        train_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
+        test_log_file = sorted(glob.glob(f'{self.train_dir_suffix}_*/events.out.tfevents.*'))[index]
+
+        experiment_data = {self.name: (train_log_file, test_log_file)}
+        summary = {}
+        for experiment, (train, test) in experiment_data.items():
+            train_data = {}
+            test_data = {}
+            self.summary[experiment] = {}
+            for e in tf.compat.v1.train.summary_iterator(train):
+                for v in e.summary.value:
+                    if v.tag not in train_data:
+                        train_data[v.tag] = []
+                    train_data[v.tag].append(v.simple_value)
+            for e in tf.compat.v1.train.summary_iterator(test):
+                    for v in e.summary.value:
+                        if v.tag not in test_data:
+                            test_data[v.tag] = []
+                        test_data[v.tag].append(v.simple_value)
+            self.summary[experiment]['train'] = train_data
+            self.summary[experiment]['test'] = test_data
+    
+    def plot_metric(self, metric='accuracy', figsize=(15, 5), ylim=[40, 100]):
+        fig, axs = plt.subplots(1, 1, figsize=(15, 5))
+
+        axs.plot(summary[self.name]['train'][metric])
+        axs.plot(summary[self.name]['test'][metric])
+        axs.set_title(f'Loss plot {self.name}')
+        axs.set_ylabel(metric.upper())
+        axs.set_xlabel('Epoch')
+        axs.set_ylim(ylim)
+        axs.legend(['train', 'test'], loc='best')
+
+        plt.show()
