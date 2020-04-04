@@ -24,6 +24,7 @@ def viz_cifar10_grid(train_loader):
 def viz_cifar10_grid_(train_loader):
     def show(img):
         npimg = img.numpy()
+        plt.figure(figsize = (20,2))
         plt.imshow(np.transpose(npimg, (1,2,0)), interpolation='nearest')
 
 

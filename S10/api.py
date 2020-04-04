@@ -6,9 +6,10 @@ from tqdm import tqdm
 
 # Pytorch import
 import torch
-import torch.optim as optim                        # Import optimizer module from pytorch
-from torch.utils.tensorboard import SummaryWriter
-from torch.optim.lr_scheduler import StepLR
+import torch.optim as optim                  # Import optimizer module from pytorch
+import torch.nn as nn                        # Import neural net module from pytorch
+
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # Tensorflow import
 import tensorflow as tf
@@ -21,6 +22,8 @@ from .models.model_s10 import ResNet18
 from .data_manager.data_manager_albumentations import DataManager
 from .training import Train
 from .testing import Test
+
+from .lr_range_finder.lr_finder import LRFinder
 
 __assignment_name__ = 's10'
 
@@ -94,15 +97,16 @@ class Experiment(object):
         else:
             optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=momentum)
 
-        scheduler = StepLR(optimizer, step_size=15, gamma=0.1)
-
+        # scheduler = StepLR(optimizer, step_size=15, gamma=0.1)
+        scheduler = ReduceLROnPlateau(optimizer, 'min')
+        
         train = Train(model=self.model, optimizer=optimizer, device=self.device, train_loader=self.data_manager.train_loader, writer=train_writer)
         test = Test(model=self.model, device=self.device, test_loader=self.data_manager.test_loader, writer=test_writer)
         
         for epoch in range(0, epochs):
-            train.step(epoch, regularization, weight_decay)
-            test.step(epoch, regularization, weight_decay)
-            scheduler.step()
+            train_epoch_data = train.step(epoch, regularization, weight_decay)
+            test_epoch_data = test.step(epoch, regularization, weight_decay)
+            scheduler.step(test_epoch_data['test_loss'])
     
     def load_summary(self, index=-1):
         """
@@ -145,6 +149,20 @@ class Experiment(object):
 
         plt.show()
     
+    def lr_range_test(self, start_lr=1e-6, end_lr=1.4, num_iter=500):
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.SGD(self.model.parameters(), lr=1e-6, momentum=0.9)
+
+        lr_finder = LRFinder(self.model, optimizer, criterion, device="cuda")
+        lr_finder.range_test(self.data_manager.train_loader, start_lr=1e-6, end_lr=1.4, num_iter=500, step_mode='exp')
+        lr_finder.plot(log_lr=True) # to inspect the loss-learning rate graph
+        lr_finder.reset() # to reset the model and optimizer to their initial state
+
+        slelected_lr = lr_finder.history['lr'][lr_finder.history['loss'].index(lr_finder.best_loss)]
+        print(f'Selected learning rate : {slelected_lr}')
+
+        return slelected_lr
+
     def get_mis_classified(self, no_of_images=25):
         """
         This function gets the misclassified images

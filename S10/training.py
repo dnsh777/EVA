@@ -60,3 +60,4 @@ class Train(object):
         train_accuracy = 100. * correct / train_len
         self.writer.add_scalar('loss', train_loss, epoch)
         self.writer.add_scalar('accuracy', train_accuracy, epoch)
+        return {'train_loss': train_loss, 'train_accuracy': train_accuracy }

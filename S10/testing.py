@@ -42,3 +42,4 @@ class Test(object):
         test_accuracy = 100. * correct / test_len
         self.writer.add_scalar('loss', test_loss, epoch)
         self.writer.add_scalar('accuracy', test_accuracy, epoch)
+        return {'test_loss': test_loss, 'test_accuracy': test_accuracy }
