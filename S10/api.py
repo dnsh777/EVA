@@ -168,7 +168,7 @@ class Experiment(object):
             batch_fail_count = failed_data.size(dim=0)
             fail_count += batch_fail_count
 
-            for count in range(batch_fail_count):
+            for count in range(batch_fail_count) and fail_count <= no_of_images:
                 failed_sample = {
                     'data': failed_data[count],
                     'target': failed_target[count],
