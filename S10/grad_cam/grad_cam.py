@@ -6,13 +6,13 @@ import torch
 from torch.nn import functional as F
 
 class GradCam():
-  def __init__(self, model, data_manager, device, target_layers):
-    self.model = model
-    self.data_manager = data_manager
-    self.model.eval()
-    self.target_layers = target_layers
-    self.name_layer_map =  dict(self.model.named_modules())
-    self.device = device
+    def __init__(self, model, data_manager, device, target_layers):
+        self.model = model
+        self.data_manager = data_manager
+        self.model.eval()
+        self.target_layers = target_layers
+        self.name_layer_map =  dict(self.model.named_modules())
+        self.device = device
   
     def get_overlays(self, image, one_hot_label, target):
         # Collect gradients and activations
