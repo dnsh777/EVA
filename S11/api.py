@@ -183,6 +183,21 @@ class Experiment(object):
 
         plt.show()
     
+    def plot_lr_range_test_ocp(self, metric='accuracy', figsize=(15, 5), ylim=[40, 100]):
+        """
+        This function loads a specific metric after training
+        """
+        fig, axs = plt.subplots(1, 1, figsize=figsize)
+        # axs.plot(self.summary[self.name]['train']['lr'], self.summary[self.name]['train'][metric])
+        axs.plot(self.summary[self.name]['test'][metric], self.summary[self.name]['train']['lr'])
+        axs.set_title(f'{metric} PLOT'.upper())
+        axs.set_ylabel(metric.upper())
+        axs.set_xlabel('LR')
+        axs.set_ylim(ylim)
+        axs.legend(['test_accuracy'], loc='best')
+
+        plt.show()
+    
     def lr_range_test(self, momentum=0.9, weight_decay=0.01, start_lr=1e-6, end_lr=1.4, num_iter=500):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(self.model.parameters(), lr=1e-6, momentum=momentum, weight_decay=weight_decay)

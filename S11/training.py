@@ -14,6 +14,10 @@ class Train(object):
         self.scheduler = scheduler
         self.writer = writer
     
+    def get_lr(self):
+        for param_group in self.optimizer.param_groups:
+            return param_group['lr']
+    
     def step(self, epoch, regularization=None, weight_decay=0.01):
         self.model.train()
         train_loss = 0
@@ -63,4 +67,5 @@ class Train(object):
         train_accuracy = 100. * correct / train_len
         self.writer.add_scalar('loss', train_loss, epoch)
         self.writer.add_scalar('accuracy', train_accuracy, epoch)
+        self.writer.add_scalar('lr', self.get_lr(), epoch)
         return {'train_loss': train_loss, 'train_accuracy': train_accuracy }
