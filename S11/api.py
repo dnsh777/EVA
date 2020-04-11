@@ -25,7 +25,7 @@ from .testing import Test
 
 from .lr_range_finder.lr_finder import LRFinder
 
-__assignment_name__ = 's10'
+__assignment_name__ = 's11'
 
 class Experiment(object):
     """
