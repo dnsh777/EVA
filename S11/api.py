@@ -75,6 +75,9 @@ class Experiment(object):
         # Holder for logs
         self.summary = {}
 
+        self.train = None
+        self.test = None
+
     
 
     def run(self, 
@@ -124,21 +127,21 @@ class Experiment(object):
                                           max_momentum=momentum, 
                                           div_factor=div_factor)
         
-        train = Train(model=self.model, 
+        self.train = Train(model=self.model, 
                       optimizer=optimizer, 
                       device=self.device, 
                       train_loader=self.data_manager.train_loader, 
                       writer=train_writer, 
                       scheduler=scheduler)
 
-        test = Test(model=self.model, 
+        self.test = Test(model=self.model, 
                     device=self.device, 
                     test_loader=self.data_manager.test_loader, 
                     writer=test_writer)
         
         for epoch in range(0, epochs):
-            train_epoch_data = train.step(epoch, regularization, weight_decay)
-            test_epoch_data = test.step(epoch, regularization, weight_decay)
+            train_epoch_data = self.train.step(epoch, regularization, weight_decay)
+            test_epoch_data = self.test.step(epoch, regularization, weight_decay)
             # Reduce LR on Plateaue
             # scheduler.step(test_epoch_data['test_loss'])
     

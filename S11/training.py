@@ -55,7 +55,7 @@ class Train(object):
             if self.scheduler:
                 self.scheduler.step()
                 # Logging - updating progress bar and summary writer
-                pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} lr={(self.scheduler.get_last_lr()):.2f} accuracy={(100. * correct / train_len):.2f}')
+                pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} lr={(self.scheduler.get_last_lr()[-1]):.2f} accuracy={(100. * correct / train_len):.2f}')
             else:
                 pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} accuracy={(100. * correct / train_len):.2f}')
             self.writer.add_scalar('train/batch_loss', batch_loss, epoch * train_len + batch_idx)
@@ -64,5 +64,5 @@ class Train(object):
         train_accuracy = 100. * correct / train_len
         self.writer.add_scalar('loss', train_loss, epoch)
         self.writer.add_scalar('accuracy', train_accuracy, epoch)
-        self.writer.add_scalar('lr', self.scheduler.get_last_lr(), epoch)
+        self.writer.add_scalar('lr', self.scheduler.get_last_lr()[-1], epoch)
         return {'train_loss': train_loss, 'train_accuracy': train_accuracy }
