@@ -60,7 +60,7 @@ class Train(object):
                 self.scheduler.step()
 
             # Logging - updating progress bar and summary writer
-            pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} accuracy={(100. * correct / train_len):.2f}')
+            pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} lr={(self.get_lr()):.2f} accuracy={(100. * correct / train_len):.2f}')
             self.writer.add_scalar('train/batch_loss', batch_loss, epoch * train_len + batch_idx)
         
         train_loss /= train_len
