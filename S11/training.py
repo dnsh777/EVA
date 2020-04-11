@@ -5,12 +5,13 @@ from tqdm import tqdm
 
 class Train(object):
 
-    def __init__(self, model, device, train_loader, optimizer, writer):
+    def __init__(self, model, device, train_loader, optimizer, writer, scheduler=None):
         super().__init__()
         self.model = model
         self.device = device
         self.train_loader = train_loader
         self.optimizer = optimizer
+        self.scheduler = scheduler
         self.writer = writer
     
     def step(self, epoch, regularization=None, weight_decay=0.01):
@@ -51,6 +52,8 @@ class Train(object):
             
             # Gradient descent
             self.optimizer.step()
+            if self.scheduler:
+                self.scheduler.step()
 
             # Logging - updating progress bar and summary writer
             pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} accuracy={(100. * correct / train_len):.2f}')

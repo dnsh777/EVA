@@ -9,7 +9,7 @@ import torch
 import torch.optim as optim                  # Import optimizer module from pytorch
 import torch.nn as nn                        # Import neural net module from pytorch
 from torch.utils.tensorboard import SummaryWriter
-from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, OneCycleLR
 
 # Tensorflow import
 import tensorflow as tf
@@ -17,7 +17,7 @@ import tensorflow as tf
 # Matplotlib import
 import matplotlib.pyplot as plt
 
-from .models.model_s10 import ResNet18
+from .models.model_s11 import Net
 # from .data_manager.data_manager_pytorch import DataManager
 from .data_manager.data_manager_albumentations import DataManager
 from .training import Train
@@ -66,7 +66,8 @@ class Experiment(object):
         self.test_dir_suffix = f'{self.dir_suffix}/run_test_{self.name}'
 
         # Initializing model
-        self.model = ResNet18().to(device=self.device)
+        # self.model = ResNet18().to(device=self.device)
+        self.model = Net().to(device=self.device)
 
         # Initializing data
         self.data_manager = DataManager(dataset_name=dataset_name)
@@ -76,7 +77,17 @@ class Experiment(object):
 
     
 
-    def run(self, epochs=40, momentum=0.9, lr=0.01, regularization=None, weight_decay=0.01):
+    def run(self, 
+            epochs=40, 
+            momentum=0.9, 
+            lr=0.01, 
+            regularization=None, 
+            weight_decay=0.01, 
+            max_lr=0.1, 
+            step_size=2000, 
+            epochs_up=5, 
+            base_momentum=0.85,
+            div_factor=10):
         """
         THis function runs the experiment
         """
@@ -98,15 +109,39 @@ class Experiment(object):
             optimizer = optim.SGD(self.model.parameters(), lr=lr, momentum=momentum)
 
         # scheduler = StepLR(optimizer, step_size=15, gamma=0.1)
-        scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=5)
+        # scheduler = ReduceLROnPlateau(optimizer, mode='min', patience=5)
+
+        steps_per_epoch = len(self.data_manager.train_loader)
+        total_steps = epochs * steps_per_epoch
+        pct_start = epochs_up / epochs
+        scheduler = OneCycleLR(optimizer, max_lr=max_lr, 
+                                          total_steps=total_steps, 
+                                          epochs=epochs, 
+                                          steps_per_epoch=steps_per_epoch, 
+                                          pct_start=pct_start, 
+                                          anneal_strategy='linear', 
+                                          cycle_momentum=True, 
+                                          base_momentum=base_momentum, 
+                                          max_momentum=momentum, 
+                                          div_factor=div_factor)
         
-        train = Train(model=self.model, optimizer=optimizer, device=self.device, train_loader=self.data_manager.train_loader, writer=train_writer)
-        test = Test(model=self.model, device=self.device, test_loader=self.data_manager.test_loader, writer=test_writer)
+        train = Train(model=self.model, 
+                      optimizer=optimizer, 
+                      device=self.device, 
+                      train_loader=self.data_manager.train_loader, 
+                      writer=train_writer, 
+                      scheduler=scheduler)
+
+        test = Test(model=self.model, 
+                    device=self.device, 
+                    test_loader=self.data_manager.test_loader, 
+                    writer=test_writer)
         
         for epoch in range(0, epochs):
             train_epoch_data = train.step(epoch, regularization, weight_decay)
             test_epoch_data = test.step(epoch, regularization, weight_decay)
-            scheduler.step(test_epoch_data['test_loss'])
+            # Reduce LR on Plateaue
+            # scheduler.step(test_epoch_data['test_loss'])
     
     def load_summary(self, index=-1):
         """

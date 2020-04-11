@@ -27,158 +27,126 @@ from torch.optim.lr_scheduler import StepLR
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        #########################################################################################
-        # INPUT BLOCK
-        #########################################################################################
+        ############################################################################################################
+        # PREP LAYER
+        ############################################################################################################
         self.input_layer = nn.Sequential(
-            nn.Conv2d(in_channels=3, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128), 
-            nn.ReLU(),
-            # nn.Dropout(0.05)
+            nn.Conv2d(in_channels=3, out_channels=64, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
+            nn.BatchNorm2d(64), 
+            nn.ReLU()
         )
-        #########################################################################################
-        # CONVOLUTION BLOCK 1
-        #########################################################################################
-        self.convblock1 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
+        ############################################################################################################
+        # LAYER 1
+        ############################################################################################################
+        self.layer1 = nn.Sequential(
+            nn.Conv2d(in_channels=64, out_channels=128, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
+            nn.MaxPool2d(2, 2),
+            nn.BatchNorm2d(128),
+            nn.ReLU()
+        )
+        ############################################################################################################
+        # RESNET BLOCK 1
+        ############################################################################################################
+        self.resblock1 = nn.Sequential(
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
             nn.BatchNorm2d(128),
             nn.ReLU(),
-            # nn.Dropout(0.05)
-        )
-        self.convblock2 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
+            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
             nn.BatchNorm2d(128),
-            nn.ReLU(),
-            # nn.Dropout(0.05)
+            nn.ReLU()
         )
-        #########################################################################################
-        # TRANSITION BLOCK 1
-        #########################################################################################
+        ############################################################################################################
+        # LAYER 2
+        ############################################################################################################
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(in_channels=128, out_channels=256, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
+            nn.MaxPool2d(2, 2),
+            nn.BatchNorm2d(256),
+            nn.ReLU()
+        )
+        ############################################################################################################
+        # LAYER 3
+        ############################################################################################################
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(in_channels=256, out_channels=512, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
+            nn.MaxPool2d(2, 2),
+            nn.BatchNorm2d(512),
+            nn.ReLU()
+        )
+        ############################################################################################################
+        # RESNET BLOCK 2
+        ############################################################################################################
+        self.resblock2 = nn.Sequential(
+            nn.Conv2d(in_channels=512, out_channels=512, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(),
+            nn.Conv2d(in_channels=512, out_channels=512, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU()
+        )
+        ############################################################################################################
+        # MAX POOL
+        ############################################################################################################
         self.pool1 = nn.Sequential(
-            nn.MaxPool2d(2, 2) # output_size = 11
+            nn.MaxPool2d(4, 4)
         )
-        #########################################################################################
-        # CONVOLUTION BLOCK 2
-        #########################################################################################
-        self.convblock3 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Dropout(0.05)
-        )
-        self.convblock4 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Dropout(0.05)
-        )
-        self.convblock5 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Dropout(0.05)
-        )
-        #########################################################################################
-        # TRANSITION BLOCK 2
-        #########################################################################################
-        self.pool2 = nn.Sequential(
-            nn.MaxPool2d(2, 2) # output_size = 11
-        )
-        #########################################################################################
-        # CONVOLUTION BLOCK 3
-        #########################################################################################
-        self.convblock6 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Dropout(0.05)
-        )
-        self.convblock7 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Dropout(0.05)
-        )
-        self.convblock8 = nn.Sequential(
-            nn.Conv2d(in_channels=128, out_channels=128, kernel_size=(3, 3), padding=(1, 1), bias=False),
-            nn.BatchNorm2d(128),
-            nn.ReLU(),
-            nn.Dropout(0.05)
-        )
-        #########################################################################################
-        # GAP BLOCK
-        #########################################################################################
-        self.gap = nn.Sequential(
-            nn.AvgPool2d(kernel_size=8)
-        )
-        #########################################################################################
+        ############################################################################################################
         # OUTPUT BLOCK
-        #########################################################################################
+        ############################################################################################################
         self.linear = nn.Sequential(
-            nn.Linear(in_features=128, out_features=10),
-            # nn.BatchNorm2d(10),
-            # nn.ReLU(),
-            # nn.Dropout(dropout_value)
+            nn.Linear(in_features=512, out_features=10)
         )
         
 
     def blocks(self, x):
 
         '''
-        x1 = Input
-        x2 = Conv(x1)
-        x3 = Conv(x1 + x2)
-
-        x4 = MaxPooling(x1 + x2 + x3)
-
-        x5 = Conv(x4)
-        x6 = Conv(x4 + x5)
-        x7 = Conv(x4 + x5 + x6)
-
-        x8 = MaxPooling(x5 + x6 + x7)
-
-        x9 = Conv(x8)
-        x10 = Conv (x8 + x9)
-        x11 = Conv (x8 + x9 + x10)
-
-        x12 = GAP(x11)
-        x13 = FC(x12)
+        PrepLayer - Conv 3x3 s1, p1) >> BN >> RELU [64k]
+        Layer1 -
+        X = Conv 3x3 (s1, p1) >> MaxPool2D >> BN >> RELU [128k]
+        R1 = ResBlock( (Conv-BN-ReLU-Conv-BN-ReLU))(X) [128k] 
+        Add(X, R1)
+        Layer 2 -
+        Conv 3x3 [256k]
+        MaxPooling2D
+        BN
+        ReLU
+        Layer 3 -
+        X = Conv 3x3 (s1, p1) >> MaxPool2D >> BN >> RELU [512k]
+        R2 = ResBlock( (Conv-BN-ReLU-Conv-BN-ReLU))(X) [512k]
+        Add(X, R2)
+        MaxPooling with Kernel Size 4
+        FC Layer 
+        SoftMax
         '''
 
-        # Input block 
-        x1 = self.input_layer(x)  # 32, 101, 101
+        # PREP LAYER
+        x = self.input_layer(x)
 
-        # Conv block 1
-        x2 = self.convblock1(x1)  # 32, 101, 101
-        x3 = self.convblock2(x1 + x2)  # 32, 101, 101
+        # LAYER 1
+        x = self.layer1(x)
+        # RESNET BLOCK 1
+        r1 = self.resblock1(x)
+        x = x + r1
 
-        # Transition block 1
-        x4 = self.pool1(x1 + x2 + x3)
+        # LAYER 2
+        x = self.layer2(x)
 
-        # Conv block 2
-        x5 = self.convblock3(x4)           # 32, 101, 101
-        x6 = self.convblock4(x4 + x5)       # 32, 101, 101
-        x7 = self.convblock5(x4 + x5 + x6)  # 32, 101, 101
+        # LAYER 2
+        x = self.layer3(x)
+        # RESNET BLOCK 2
+        r2 = self.resblock2(x)
+        x = x + r2
 
-        # Transition block 2
-        x8 = self.pool1(x5 + x6 + x7)
-
-        # Conv block 3
-        x9 = self.convblock6(x8)           # 32, 101, 101
-        x10 = self.convblock7(x8 + x9)       # 32, 101, 101
-        x11 = self.convblock8(x8 + x9 + x10)  # 32, 101, 101
-
-        x = self.gap(x11)         # 64,  1,  1
-        
+        # MAX POOL
+        x = self.pool1(x)
         x = torch.flatten(x, 1)
 
-        # Predictor
+        # LINEAR
         x = self.linear(x)
 
-        return x # .view(-1, 2)
+        return x
 
     def forward(self, x):
-        
         x = self.blocks(x)
-
         return F.log_softmax(x, dim=-1)
