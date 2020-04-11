@@ -57,8 +57,6 @@ class Train(object):
                     self.scheduler.step()
                 except Exception as ex:
                     pass
-
-            if len(self.scheduler.get_last_lr()
                 # Logging - updating progress bar and summary writer
                 pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} lr={(self.scheduler.get_last_lr()[-1]):.2f} accuracy={(100. * correct / train_len):.2f}')
             else:
