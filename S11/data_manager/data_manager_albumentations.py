@@ -2,7 +2,7 @@ import torchvision
 from torchvision import datasets
 
 import torch
-from albumentations import Compose, Rotate, HorizontalFlip, Normalize, RandomSizedCrop, Cutout
+from albumentations import Compose, Rotate, HorizontalFlip, Normalize, RandomCrop, Cutout, PadIfNeeded, Lambda
 from albumentations.pytorch import ToTensor
 
 class CIFAR10_dataset(datasets.CIFAR10):
@@ -56,10 +56,9 @@ class DataManager(object):
                 if train_transforms:
                     self.train_transforms = train_transforms
                 else:
-                    self.train_transforms = train_transforms = Compose([Rotate(limit=15), 
-                                                                        Cutout(num_holes=8, max_h_size=12, max_w_size=8, always_apply=False, p=0.5),
-                                                                        # RandomSizedCrop(min_max_height=(20, 32), height=32, width=32),
-                                                                        HorizontalFlip(),
+                    self.train_transforms = train_transforms = Compose([Lambda(image=DataManager.padded_random_crop, always_apply=False, p=0.5),
+                                                                        Cutout(num_holes=4, max_h_size=8, max_w_size=8, always_apply=False, p=0.5),
+                                                                        HorizontalFlip(p=0.5),
                                                                         Normalize(
                                                                             mean=[0.4914, 0.4822, 0.4465],
                                                                             std=[0.2471, 0.2435, 0.2616],
@@ -90,3 +89,9 @@ class DataManager(object):
             self.train_loader = torch.utils.data.DataLoader(self.trainset, **dataloader_args)
             # test dataloader
             self.test_loader = torch.utils.data.DataLoader(self.testset, **dataloader_args)
+
+    @staticmethod
+    def padded_random_crop (x , **kwargs):
+        x = PadIfNeeded(min_height=40, min_width=40, border_mode=4, value=None, mask_value=None, always_apply=True).apply(x)
+        x = RandomCrop(height=32, width=32, always_apply=True).apply(x)
+        return x
