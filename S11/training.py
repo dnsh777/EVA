@@ -14,10 +14,6 @@ class Train(object):
         self.scheduler = scheduler
         self.writer = writer
     
-    def get_lr(self):
-        for param_group in self.optimizer.param_groups:
-            return param_group['lr']
-    
     def step(self, epoch, regularization=None, weight_decay=0.01):
         self.model.train()
         train_loss = 0
@@ -58,14 +54,15 @@ class Train(object):
             self.optimizer.step()
             if self.scheduler:
                 self.scheduler.step()
-
-            # Logging - updating progress bar and summary writer
-            pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} lr={(self.get_lr()):.2f} accuracy={(100. * correct / train_len):.2f}')
+                # Logging - updating progress bar and summary writer
+                pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} accuracy={(100. * correct / train_len):.2f}')
+            else:
+                pbar.set_description(desc= f'TRAIN : epoch={epoch} train_loss={(train_loss / train_len):.5f} correct/total={correct}/{train_len} lr={(self.scheduler.get_last_lr()):.2f} accuracy={(100. * correct / train_len):.2f}')
             self.writer.add_scalar('train/batch_loss', batch_loss, epoch * train_len + batch_idx)
         
         train_loss /= train_len
         train_accuracy = 100. * correct / train_len
         self.writer.add_scalar('loss', train_loss, epoch)
         self.writer.add_scalar('accuracy', train_accuracy, epoch)
-        self.writer.add_scalar('lr', self.get_lr(), epoch)
+        self.writer.add_scalar('lr', self.scheduler.get_last_lr(), epoch)
         return {'train_loss': train_loss, 'train_accuracy': train_accuracy }
