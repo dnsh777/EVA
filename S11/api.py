@@ -189,7 +189,7 @@ class Experiment(object):
         """
         fig, axs = plt.subplots(1, 1, figsize=figsize)
         # axs.plot(self.summary[self.name]['train']['lr'], self.summary[self.name]['train'][metric])
-        axs.plot(self.summary[self.name]['test'][metric], self.summary[self.name]['train']['lr'])
+        axs.plot(self.summary[self.name]['train']['lr'], self.summary[self.name]['test'][metric])
         axs.set_title(f'{metric} PLOT'.upper())
         axs.set_ylabel(metric.upper())
         axs.set_xlabel('LR')
