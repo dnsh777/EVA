@@ -83,8 +83,7 @@ class Experiment(object):
             lr=0.01, 
             regularization=None, 
             weight_decay=0.01, 
-            max_lr=0.1, 
-            step_size=2000, 
+            max_lr=0.1,
             epochs_up=5, 
             base_momentum=0.85,
             div_factor=10):
