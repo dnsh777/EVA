@@ -220,8 +220,8 @@ class DataManager(object):
                     self.train_transforms = train_transforms
                 else:
                     self.train_transforms = Compose([
-                                                    Lambda(image=DataManager.padded_random_crop_tiny_imagenet, always_apply=False, p=0.5),
-                                                    Cutout(num_holes=8, max_h_size=16, max_w_size=16, always_apply=False, p=0.5),
+                                                    Lambda(image=DataManager.padded_random_crop_tiny_imagenet, always_apply=False, p=0.75),
+                                                    Cutout(num_holes=8, max_h_size=16, max_w_size=16, always_apply=False, p=0.75),
                                                     HorizontalFlip(p=0.5),
                                                     Normalize(
                                                         mean=[0.39755616, 0.44819888, 0.48042724],
