@@ -63,7 +63,7 @@ class TinyImageNet(Dataset):
         # Create mixed data
         self.df = pd.DataFrame(data_items)
         labels = self.df['id'].unique().tolist()
-        self.label_map = dict(zip(labels, np.arange(1, len(labels) + 1, 1)))
+        self.label_map = dict(zip(labels, np.arange(len(labels))))
         self.df['target'] = self.df['id'].map(self.label_map)
 
         # Default to train mode
