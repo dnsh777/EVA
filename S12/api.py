@@ -140,7 +140,9 @@ class Experiment(object):
                     writer=test_writer)
         
         for epoch in range(0, epochs):
+            self.data_manager.set_train()
             train_epoch_data = self.train.step(epoch, regularization, weight_decay)
+            self.data_manager.set_eval()
             test_epoch_data = self.test.step(epoch, regularization, weight_decay)
             # Reduce LR on Plateaue
             # scheduler.step(test_epoch_data['test_loss'])
